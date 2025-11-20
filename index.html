@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+	<title>Гра «Однорукий бандит»</title>
+    <link rel="stylesheet" href="LR10.css">
+</head>
+<body>
+<h1 id="user-title"></h1>
+<div id="try-box">Спроба <span id="try-num">1</span> із 3</div>
+<button id="btn">Крутити</button>
+<div id="machine">
+<div class="col" id="c1"></div>
+<div class="col" id="c2"></div>
+<div class="col" id="c3"></div>
+</div>
+<div id="result"></div>
+<script>
+const pics = [
+        "images/apple.jpg",
+        "images/banan.jpg",
+        "images/grysha.jpg",
+        "images/klubn.png",
+        "images/mandar.jpg"
+];
+const name = prompt("Ваше ім'я?");
+document.querySelector("#user-title").textContent = "Гравець: " + (name || "Анонім");
+let attempt = 1;
+let winCount = 0;
+const columns = ["c1", "c2", "c3"];
+function fillColumn(id) {
+const col = document.getElementById(id);
+col.innerHTML = "";
+const mix = pics.slice().sort(() => Math.random() - 0.5);
+const chosen = mix.slice(0, 3);
+chosen.forEach(src => {
+const img = document.createElement("img");
+img.src = src;
+img.className = "slot-img";
+col.appendChild(img);
+requestAnimationFrame(() => {
+img.classList.add("pop");
+setTimeout(() => img.classList.remove("pop"), 250);
+});
+});
+return chosen[0];
+}
+document.getElementById("btn").onclick = () => {
+if (attempt > 3) return;
+const a = fillColumn("c1");
+const b = fillColumn("c2");
+const c = fillColumn("c3");
+if (a === b && b === c) winCount++;
+document.getElementById("try-num").textContent = attempt;
+if (attempt === 3) {
+if (winCount > 0) {
+document.getElementById("result").textContent = "🎉 Є збіг! Перемога!";
+} else {
+document.getElementById("result").textContent = "❌ Цього разу не пощастило.";
+}
+document.getElementById("btn").disabled = true;
+}
+attempt++;
+};
+</script>
+</body>
